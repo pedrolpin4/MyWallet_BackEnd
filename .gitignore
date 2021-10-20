@@ -1,0 +1,4 @@
+# the following folders will be ignored
+
+node_modules/
+.vscode/

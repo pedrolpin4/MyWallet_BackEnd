@@ -1,7 +1,8 @@
-import Joi from "joi";
 import bcrypt from "bcrypt";
+import validations from "../validation/JoiValidations.js";
+import { v4 as uuid } from "uuid";
 
-const signIn = async (req, res, connection) => {
+const signUp = async (req, res, connection) => {
     const {
         name,
         email,
@@ -9,19 +10,14 @@ const signIn = async (req, res, connection) => {
         repeatPassword 
     } = req.body;
     
-    const signInValidator = Joi.object({
-        name: Joi.string().min(3).max(20).required(),
-        email: Joi.string().email().required(),
-        password: Joi.string().min(6).max(12).required(),
-        repeatPassword: Joi.string().required()
-    })
+    const signUpValidator = validations.signUp
+
+    if(signUpValidator.validate(req.body).error || repeatPassword !== password){
+        res.sendStatus(400);
+        return;
+    }
 
     try {
-        if(signInValidator.validate(req.body).error || repeatPassword !== password){
-            res.sendStatus(400);
-            return;
-        }
-
         const emailVerifier = await connection.query(`SELECT * FROM users WHERE email = $1`, [email])
 
         if(emailVerifier.rows.length){
@@ -41,11 +37,21 @@ const signIn = async (req, res, connection) => {
     }
 }
 
-const signUp = async (req, res, connection) => {
+const signIn = async (req, res, connection) => {
     const {
         email,
         password
     } = req.body;
+
+    const token = uuid()
+
+    const signInValidator = validations.signIn;
+
+    if(signInValidator.validate(req.body).error){
+        res.sendStatus(400);
+        return;
+    }
+
     try {
         const result = await connection.query(`SELECT * FROM users WHERE email = $1`, [email]);
 
@@ -55,15 +61,13 @@ const signUp = async (req, res, connection) => {
             res.sendStatus(404);
             return;
         }
-    
-        console.log(user.password);
 
         if(!bcrypt.compareSync(password, user.password)){
             res.sendStatus(401);
             return;
         }
     
-        res.sendStatus(200);    
+        res.send(token).status(200);    
     } catch (error) {
         console.log(error);
         res.sendStatus(500);

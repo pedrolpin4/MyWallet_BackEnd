@@ -1,8 +1,9 @@
 import bcrypt from "bcrypt";
-import validations from "../validation/JoiValidations.js";
 import { v4 as uuid } from "uuid";
+import validations from "../validation/JoiValidations.js";
+import connection from "../database/database.js";
 
-const signUp = async (req, res, connection) => {
+const signUp = async (req, res) => {
     const {
         name,
         email,
@@ -37,7 +38,7 @@ const signUp = async (req, res, connection) => {
     }
 }
 
-const signIn = async (req, res, connection) => {
+const signIn = async (req, res) => {
     const {
         email,
         password
@@ -67,7 +68,7 @@ const signIn = async (req, res, connection) => {
             return;
         }
     
-        res.send(token).status(200);    
+        res.send({token}).status(200);    
     } catch (error) {
         console.log(error);
         res.sendStatus(500);

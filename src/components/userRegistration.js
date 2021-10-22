@@ -56,8 +56,6 @@ const signIn = async (req, res) => {
             JOIN sessions ON users.id = sessions."userId"
             WHERE email = $1`, [email]);
 
-        console.log(tokenVerifier.rows);
-        
         if(tokenVerifier.rows.length){
             await connection.query(`DELETE FROM sessions 
                 WHERE token = $1`, [tokenVerifier.rows[0].token]);

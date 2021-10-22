@@ -18,6 +18,7 @@ const getIncomesAndExpenses = async (req, res) => {
 
         const transactions = result.rows;
         res.send(transactions);
+        
     } catch(error){
         console.log(error);
         res.sendStatus(500)

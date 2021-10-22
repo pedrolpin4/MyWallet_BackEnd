@@ -44,8 +44,6 @@ const signIn = async (req, res) => {
         password
     } = req.body;
 
-    const token = uuid()
-
     const signInValidator = validations.signIn;
 
     if(signInValidator.validate(req.body).error){
@@ -57,7 +55,7 @@ const signIn = async (req, res) => {
         const result = await connection.query(`SELECT * FROM users WHERE email = $1`, [email]);
 
         const user = result.rows[0];
-
+        
         if(!user){
             res.sendStatus(404);
             return;
@@ -67,8 +65,18 @@ const signIn = async (req, res) => {
             res.sendStatus(401);
             return;
         }
-    
-        res.send({token}).status(200);    
+
+
+        const token = uuid();
+        await connection.query(`INSERT INTO sessions ("userId", token) 
+            VALUES($1, $2)`, [user.id, token]);
+
+
+        res.send({
+            token,
+            name: user.name
+        }).status(200);    
+
     } catch (error) {
         console.log(error);
         res.sendStatus(500);

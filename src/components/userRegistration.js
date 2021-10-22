@@ -52,7 +52,19 @@ const signIn = async (req, res) => {
     }
 
     try {
-        const result = await connection.query(`SELECT * FROM users WHERE email = $1`, [email]);
+        const tokenVerifier = await connection.query(`SELECT * FROM users 
+            JOIN sessions ON users.id = sessions."userId"
+            WHERE email = $1`, [email]);
+
+        console.log(tokenVerifier.rows);
+        
+        if(tokenVerifier.rows.length){
+            await connection.query(`DELETE FROM sessions 
+                WHERE token = $1`, [tokenVerifier.rows[0].token]);
+        }
+
+        const result = await connection.query(`SELECT * FROM users
+            WHERE email = $1`,[email]);
 
         const user = result.rows[0];
         
@@ -66,11 +78,9 @@ const signIn = async (req, res) => {
             return;
         }
 
-
         const token = uuid();
         await connection.query(`INSERT INTO sessions ("userId", token) 
             VALUES($1, $2)`, [user.id, token]);
-
 
         res.send({
             token,

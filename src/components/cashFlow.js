@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import connection from "../database/database.js";
 
 const getIncomesAndExpenses = async (req, res) => {
-    console.log(req.headers);
     const authorization = req.headers['authorization'];
     const token = authorization?.replace('Bearer ', '');
 

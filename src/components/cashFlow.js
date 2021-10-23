@@ -54,7 +54,6 @@ const postTransation = async (req, res, type) => {
             WHERE token = $1
         `, [token]);
         
-        console.log(`rows: ${JSON.stringify(user.rows[0])}`, `token: ${token}`);
         if(!user.rows.length){
             res.sendStatus(401);
             return; 
@@ -63,7 +62,6 @@ const postTransation = async (req, res, type) => {
         const userId = user.rows[0].userId;
         const date = dayjs().format('YYYY-MM-DD');
         const signalValue = (type === "income" ? value : value * -1)
-        console.log(signalValue);
 
         await connection.query(`
             INSERT INTO transactions ("userId", value, description, date)

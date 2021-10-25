@@ -7,6 +7,7 @@ describe('POST "/sign-in" ', () => {
     beforeAll(async () => {
         const encriptedPassword = bcrypt.hashSync('1234567', 10);
         await connection.query(`DELETE FROM users WHERE email = 'pedrin@gmail.com';`);
+        await connection.query(`DELETE FROM users WHERE email = 'pedrin@gmail.com';`);
         await connection.query('DELETE from sessions')
         await connection.query(`INSERT INTO users (name, email, password) 
             VALUES ('pedro', 'pedrin@gmail.com', $1)`, [encriptedPassword])
@@ -89,7 +90,7 @@ describe('POST "/sign-in" ', () => {
         expect(result.status).toEqual(200)
         expect(result.body).toEqual({
             token: expect.any(String),
-            name: expect.any(String)
+            name: 'pedro'
         })
     })
 })

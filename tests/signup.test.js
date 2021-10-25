@@ -4,8 +4,7 @@ import connection from "../src/database/database.js"
 
 describe("POST '/sign-up'", () => {
     beforeAll(async () => {
-        await connection.query('DELETE FROM users;');
-        await connection.query('DELETE from sessions')
+        await connection.query(`DELETE FROM users WHERE email = 'pedrolucas@gmail.com';`);
         await connection.query(`INSERT INTO users (name, email, password) 
             VALUES ('pedro', 'pedrin@gmail.com', '123456')`)
     })

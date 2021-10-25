@@ -6,7 +6,7 @@ describe('GET "/cash-flow" ', () => {
     const token = '10f8c2d2-7115-4349-b124-e497f0b7f00f';
 
     beforeAll(async () => {
-        await connection.query('DELETE FROM sessions;');
+        await connection.query('DELETE FROM sessions WHERE "userId" = 1;');
         await connection.query(`INSERT INTO sessions ("userId", token)
             VALUES (1, $1)`, [token])
         await connection.query(`INSERT INTO transactions (date, value, "userId", description)

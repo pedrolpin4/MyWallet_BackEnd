@@ -23,7 +23,7 @@ describe('GET "/cash-flow" ', () => {
             .set('Authorization', `Bearer ${token}`);
         expect(result.status).toEqual(200)
         expect(result.body).toEqual([{
-            date: expect.any(String),
+            date: "2021-10-15T03:00:00.000Z",
             id: expect.any(Number),
             value: "200",
             userId: 1,

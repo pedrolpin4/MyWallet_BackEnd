@@ -13,6 +13,8 @@ describe('POST "/sign-in" ', () => {
             VALUES ('pedro', 'pedrin@gmail.com', $1)`, [encriptedPassword])
     })
 
+    afterAll(() => {connection.end()})
+
     it('POST "/sign-in" returns 400 if non complete objects', async () => {
         const body = {
             password: ''

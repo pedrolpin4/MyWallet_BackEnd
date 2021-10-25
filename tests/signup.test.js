@@ -9,6 +9,8 @@ describe("POST '/sign-up'", () => {
             VALUES ('pedro', 'pedrin@gmail.com', '123456')`)
     })
 
+    afterAll(() => {connection.end()})
+
     it('POST /sign-up returns 400 if non complete objects ', async () => {
         const body = {
             name: '',

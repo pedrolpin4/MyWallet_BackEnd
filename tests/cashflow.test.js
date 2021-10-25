@@ -6,7 +6,7 @@ describe('GET "/cash-flow" ', () => {
     const token = '10f8c2d2-7115-4349-b124-e497f0b7f00f';
 
     beforeAll(async () => {
-        await connection.query('DELETE FROM sessions WHERE "userId" = 1;');
+        await connection.query('DELETE FROM sessions WHERE "userId" = 1');
         await connection.query(`INSERT INTO sessions ("userId", token)
             VALUES (1, $1)`, [token])
         await connection.query(`INSERT INTO transactions (date, value, "userId", description)
@@ -16,6 +16,8 @@ describe('GET "/cash-flow" ', () => {
     afterEach(async () => {
         await connection.query('DELETE FROM transactions WHERE "userId" = 1')
     })
+
+    afterAll(() => {connection.end()})
 
     it('GET "/cash-flow" returns 200 if valid token and has transactions', async () => {
         const result = await supertest(app)

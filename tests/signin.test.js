@@ -6,7 +6,7 @@ import bcrypt from "bcrypt"
 describe('POST "/sign-in" ', () => {
     beforeAll(async () => {
         const encriptedPassword = bcrypt.hashSync('1234567', 10);
-        await connection.query('DELETE FROM users;');
+        await connection.query(`DELETE FROM users WHERE email = 'pedrin@gmail.com';`);
         await connection.query('DELETE from sessions')
         await connection.query(`INSERT INTO users (name, email, password) 
             VALUES ('pedro', 'pedrin@gmail.com', $1)`, [encriptedPassword])
@@ -87,5 +87,9 @@ describe('POST "/sign-in" ', () => {
             .send(body);
         
         expect(result.status).toEqual(200)
+        expect(result.body).toEqual({
+            token: expect.any(String),
+            name: expect.any(String)
+        })
     })
 })

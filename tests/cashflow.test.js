@@ -22,6 +22,13 @@ describe('GET "/cash-flow" ', () => {
             .get('/cash-flow')
             .set('Authorization', `Bearer ${token}`);
         expect(result.status).toEqual(200)
+        expect(result.body).toEqual([{
+            date: expect.any(String),
+            id: expect.any(Number),
+            value: "200",
+            userId: 1,
+            description: 'nothing'
+        }])
     })
 
     it('GET "/cash-flow" returns 204 if valid token and no transactions', async () => {
@@ -29,6 +36,7 @@ describe('GET "/cash-flow" ', () => {
             .get('/cash-flow')
             .set('Authorization', `Bearer ${token}`);
         expect(result.status).toEqual(204)
+        expect(result.body).toEqual({})
     })
 
     it('GET "/cash-flow" returns 401 if no headers', async () => {

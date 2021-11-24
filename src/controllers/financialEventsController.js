@@ -86,10 +86,8 @@ const postExpense = async (req,res) => {
     return result
 }
 
-const cashFlow = {
+export {
     getIncomesAndExpenses,
     postIncome,
     postExpense
 }
-
-export default cashFlow

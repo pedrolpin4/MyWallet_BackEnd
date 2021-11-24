@@ -91,9 +91,7 @@ const signIn = async (req, res) => {
     }
 }
 
-const userRegistration = {
+export {
     signIn,
     signUp
 }
-
-export default userRegistration

@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt"
 import { v4 as uuid } from "uuid"
-import connection from "../database/database.js"
+import * as userRepositories from "../repositories/userRepository.js"
 
 const verifyExistentUser = async (email) => {
-    const existentUser = await connection.query(`SELECT * FROM users WHERE email = $1`, [email])
+    const existentUser = await userRepositories.selectAllUsers(email)
 
     if(existentUser.rowCount){
         return true       
@@ -15,14 +15,11 @@ const verifyExistentUser = async (email) => {
 const createUser = async (name, email, password) => {
     const hashedPassword = bcrypt.hashSync(password, 10);
 
-    await connection.query(`INSERT INTO users (name, email, password) 
-        VALUES ($1, $2, $3)`, [name, email, hashedPassword]);
+    await userRepositories.insertSignUp(name, email, hashedPassword)
 }
 
 const verifyLogin = async (email) => {
-    const result = await connection.query(`SELECT * FROM users
-            WHERE email = $1`,[email]);
-
+    const result = await userRepositories.selectLoginUser(email);
     const user = result.rows[0];
     
     if(!user){
@@ -43,8 +40,7 @@ const verifyPassword = (password, hashedPassword) => {
 const createToken = async (id) => {
     const token = uuid();
 
-    await connection.query(`INSERT INTO sessions ("userId", token) 
-        VALUES($1, $2)`, [id, token]);
+    await userRepositories.insertToken(id, token)
 
     return token
 }

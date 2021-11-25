@@ -1,7 +1,5 @@
-import bcrypt from "bcrypt";
-import { v4 as uuid } from "uuid";
 import validations from "../validation/JoiValidations.js";
-import connection from "../database/database.js";
+import * as userServices from "../services/userServices.js"
 
 const signUp = async (req, res) => {
     const {
@@ -19,17 +17,13 @@ const signUp = async (req, res) => {
     }
 
     try {
-        const emailVerifier = await connection.query(`SELECT * FROM users WHERE email = $1`, [email])
+        const existentUser = await userServices.verifyExistentUser(email);
 
-        if(emailVerifier.rows.length){
-            res.sendStatus(409);
-            return;
+        if(existentUser){
+            return res.sendStatus(409);
         }
 
-        const encriptedPassword = bcrypt.hashSync(password, 10);
-
-        await connection.query(`INSERT INTO users (name, email, password) 
-            VALUES ($1, $2, $3)`, [name, email, encriptedPassword]);
+        await userServices.createUser(name, email, password) 
 
         res.sendStatus(201);
     } catch (error) {
@@ -47,38 +41,23 @@ const signIn = async (req, res) => {
     const signInValidator = validations.signIn;
 
     if(signInValidator.validate(req.body).error){
-        res.sendStatus(400);
-        return;
+        return res.sendStatus(400);
     }
 
     try {
-        const tokenVerifier = await connection.query(`SELECT * FROM users 
-            JOIN sessions ON users.id = sessions."userId"
-            WHERE email = $1`, [email]);
+        const user = await userServices.verifyLogin(email, password);
 
-        if(tokenVerifier.rows.length){
-            await connection.query(`DELETE FROM sessions 
-                WHERE token = $1`, [tokenVerifier.rows[0].token]);
-        }
-
-        const result = await connection.query(`SELECT * FROM users
-            WHERE email = $1`,[email]);
-
-        const user = result.rows[0];
-        
         if(!user){
-            res.sendStatus(404);
-            return;
+            return res.sendStatus(404)
         }
 
-        if(!bcrypt.compareSync(password, user.password)){
-            res.sendStatus(401);
-            return;
+        const passVerify = userServices.verifyPassword(password, user.password)
+
+        if(!passVerify){
+            return res.sendStatus(401)
         }
 
-        const token = uuid();
-        await connection.query(`INSERT INTO sessions ("userId", token) 
-            VALUES($1, $2)`, [user.id, token]);
+        const token = await userServices.createToken()
 
         res.send({
             token,

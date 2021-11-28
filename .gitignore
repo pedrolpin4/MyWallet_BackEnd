@@ -1,4 +1,10 @@
 # the following folders will be ignored
 
-node_modules/
+# dependencies
+/node_modules
 .vscode/
+
+# misc
+.env.prod
+.env.test
+.env.dev

@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import connection from "../database/database.js";
 
 const verifyToken = async (req) => {
-    const authorization = req.headers['authorization'];
+    const {authorization} = req.headers;
     const token = authorization?.replace('Bearer ', '');
 
     const user = await connection.query(`
@@ -39,7 +39,7 @@ const getTransactions = async (user) => {
 
 
 const createTransaction = async (user, type, value, description) => {
-    const userId = user.rows[0].userId;
+    const {userId} = user.rows[0];
     const date = dayjs().format('YYYY-MM-DD');
     const signalValue = (type === "income" ? value : value * -1)
 

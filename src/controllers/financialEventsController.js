@@ -6,18 +6,19 @@ const getIncomesAndExpenses = async (req, res) => {
         const user = await financialServices.verifyToken(req);
 
         if(!user){
-            return res.sendStatus(401);
+            res.sendStatus(401);
+            return;
         }
     
         const transactions = await financialServices.getTransactions(user);
 
         if(!transactions){
-            return res.sendStatus(204);
+            res.sendStatus(204);
+            return;
         }
 
         res.send(transactions); 
     } catch(error){
-        console.log(error);
         res.sendStatus(500)
     }
 }
@@ -35,7 +36,8 @@ const postTransation = async (req, res, type) => {
         const user = await financialServices.verifyToken(req);
 
         if(!user){
-            return res.sendStatus(401)
+            res.sendStatus(401);
+            return;
         }
         
         await financialServices.createTransaction(user, type, value, description);
@@ -43,7 +45,6 @@ const postTransation = async (req, res, type) => {
         res.sendStatus(201);
         
     } catch (error){
-        console.log(error);
         res.sendStatus(500)
     }
 }

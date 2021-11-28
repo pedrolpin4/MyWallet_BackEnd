@@ -20,14 +20,14 @@ const signUp = async (req, res) => {
         const existentUser = await userServices.verifyExistentUser(email);
 
         if(existentUser){
-            return res.sendStatus(409);
+            res.sendStatus(409);
+            return;
         }
 
         await userServices.createUser(name, email, password) 
 
         res.sendStatus(201);
     } catch (error) {
-        console.log(error);
         res.sendStatus(500)
     }
 }
@@ -41,20 +41,23 @@ const signIn = async (req, res) => {
     const signInValidator = validations.signIn;
 
     if(signInValidator.validate(req.body).error){
-        return res.sendStatus(400);
+        res.sendStatus(400);;
+        return;
     }
 
     try {
         const user = await userServices.verifyLogin(email, password);
 
         if(!user){
-            return res.sendStatus(404)
+            res.sendStatus(404);
+            return;
         }
 
         const passVerify = userServices.verifyPassword(password, user.password)
 
         if(!passVerify){
-            return res.sendStatus(401)
+            res.sendStatus(401);
+            return;
         }
 
         const token = await userServices.createToken()
@@ -65,7 +68,6 @@ const signIn = async (req, res) => {
         }).status(200);    
 
     } catch (error) {
-        console.log(error);
         res.sendStatus(500);
     }
 }

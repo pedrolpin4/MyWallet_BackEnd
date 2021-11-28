@@ -60,7 +60,7 @@ const signIn = async (req, res) => {
             return;
         }
 
-        const token = await userServices.createToken()
+        const token = await userServices.createToken(user.id)
 
         res.send({
             token,

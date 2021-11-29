@@ -7,9 +7,14 @@
 ## About
 
 Do you like registering your incomes and expenses in an old notebook? Well, I don't. If you're like me and enjoys making things faster and less paperful, try this app: Oops, and it has a dark mode design that is beau ti ful. Try the production version here: <a href = "https://mywallet-gamma.netlify.app" target ="_blank">Click Me!!</a>
-## Resourses
+<br/>
 
+## Features
 
+- [x] login and sign-up
+- [x] see your cash-flow with date, description and value infos
+- [x] total balance based on your cash-flow
+- [x] register your credits (expenses) and yur debits (incomes)
 
 ## How to run?
 

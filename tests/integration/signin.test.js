@@ -1,12 +1,15 @@
 import app from "../../src/app.js";
 import supertest from "supertest";
+import { createUser, deleteUser } from '../factories/userFactory.js'
 
 describe('POST "/sign-in" ', () => {
+    let user;
     beforeAll(async () => {
+        user = await createUser()
     })
 
-    afterAll(() => {
-
+    afterAll(async () => {
+        await deleteUser(user.id)
     })
 
     it('POST "/sign-in" returns 400 if non complete objects', async () => {
@@ -62,7 +65,7 @@ describe('POST "/sign-in" ', () => {
 
     it('POST "/sign-in" returns 401 if a wrong password', async () => {
         const body = {
-            email: 'pedrin@gmail.com',
+            email: user.email,
             password: '12345678',
         }
 
@@ -75,8 +78,8 @@ describe('POST "/sign-in" ', () => {
 
     it('POST "/sign-in" returns 200 if succes', async () => {
         const body = {
-            email: 'pedrin@gmail.com',
-            password: '1234567'
+            email: user.email,
+            password: '123456',
         }
 
         const result = await supertest(app)
@@ -86,7 +89,7 @@ describe('POST "/sign-in" ', () => {
         expect(result.status).toEqual(200)
         expect(result.body).toEqual({
             token: expect.any(String),
-            name: 'pedro'
+            name: expect.any(String),
         })
     })
 })

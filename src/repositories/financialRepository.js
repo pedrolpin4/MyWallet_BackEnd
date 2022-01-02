@@ -18,11 +18,11 @@ const selectTransactionsByToken = async (token) => {
     return result;
 };
 
-const insertTransaction = async (userId, signalValue, description, date) => {
+const insertTransaction = async (userId, signalValue, description, date, categoryId) => {
     const result = await connection.query(`
-        INSERT INTO transactions ("userId", value, description, date)
-        VALUES ($1, $2, $3, $4)
-    `,[userId, signalValue, description, date]);
+        INSERT INTO transactions ("userId", value, description, date, category_id)
+        VALUES ($1, $2, $3, $4, $5)
+    `,[userId, signalValue, description, date, categoryId]);
     return result;
 };
 

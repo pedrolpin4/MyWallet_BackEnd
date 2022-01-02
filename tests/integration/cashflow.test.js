@@ -5,14 +5,14 @@ import { createTransaction, deleteTransaction } from "../factories/transactionsF
 
 describe('GET "/cash-flow" ', () => {
     let user;
-    let transactionId;
+    let transaction;
     beforeAll(async () => {
         user = await createUser();
-        transactionId = await createTransaction(user.id)
+        transaction = await createTransaction(user.id)
     })
 
     afterEach(async () => {
-        await deleteTransaction(transactionId);
+        await deleteTransaction(transaction.id, transaction.category_id);
     })
 
     afterAll(async () => {

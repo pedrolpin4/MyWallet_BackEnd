@@ -8,11 +8,12 @@ const createTransaction = async (userId) => {
     const DBDate = dayjs().format('YYYY-MM-DD');
     const transaction = await connection.query(`INSERT INTO transactions ("userId", description, value, date, category_id) 
         VALUES ($1, $2, $3, $4, $5) RETURNING *`, [userId, DBDescription, 34, DBDate, DBCategory.rows[0].id]);
-    return transaction.rows[0].id;
+    return transaction.rows[0];
 }
 
-const deleteTransaction = async (transactionId) => {
+const deleteTransaction = async (transactionId, categoryId) => {
     await connection.query('DELETE FROM transactions WHERE id = $1', [transactionId]);
+    await connection.query('DELETE FROM categories WHERE id = $1', [categoryId]);
 }
 
 export {

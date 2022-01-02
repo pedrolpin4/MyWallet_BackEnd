@@ -17,11 +17,11 @@ const getTransactions = async (user) => {
     return transactions
 }
 
-const createTransaction = async (user, type, value, description) => {
+const createTransaction = async (user, type, value, description, categoryId) => {
     const { userId } = user.rows[0];
     const date = dayjs().format('YYYY-MM-DD');
     const signalValue = (type === "income" ? value : value * -1)
-    await financialRepository.insertTransaction(userId, signalValue, description, date)
+    await financialRepository.insertTransaction(userId, signalValue, description, date, categoryId)
 }
 
 export {

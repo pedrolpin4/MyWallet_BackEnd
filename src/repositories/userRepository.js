@@ -32,5 +32,5 @@ export {
     insertSignUp,
     selectAllUsers,
     selectLoginUser,
-    insertToken
+    insertToken,
 }

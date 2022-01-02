@@ -1,18 +1,13 @@
-import app from "../src/app.js";
+import app from "../../src/app.js";
 import supertest from "supertest";
-import connection from "../src/database/database.js"
-import bcrypt from "bcrypt"
 
 describe('POST "/sign-in" ', () => {
     beforeAll(async () => {
-        const encriptedPassword = bcrypt.hashSync('1234567', 10);
-        await connection.query(`DELETE FROM users WHERE email = 'pedrin@gmail.com';`);
-        await connection.query('DELETE from sessions')
-        await connection.query(`INSERT INTO users (name, email, password) 
-            VALUES ('pedro', 'pedrin@gmail.com', $1)`, [encriptedPassword])
     })
 
-    afterAll(() => {connection.end()})
+    afterAll(() => {
+
+    })
 
     it('POST "/sign-in" returns 400 if non complete objects', async () => {
         const body = {

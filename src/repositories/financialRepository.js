@@ -13,7 +13,7 @@ const selectTransactionsByToken = async (token) => {
         SELECT transactions.* FROM sessions
         JOIN transactions
         ON sessions."userId" = transactions."userId"
-        WHERE sessions.token = $1
+        WHERE sessions.token = $1 ORDER BY id DESC
     `, [token]);
     return result;
 };

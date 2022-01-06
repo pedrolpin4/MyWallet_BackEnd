@@ -6,6 +6,16 @@ const handleCategoriesByType = async (type) => {
     return categories
 }
 
+const handleCategoryStatsByType = async (type) => {
+    const isIncome = type === 'income' ? 't' : 'f';
+    const stats = await categoryRepository.selectCategoryStatsByType(isIncome);
+    return stats.rows.map(stat => ({
+        ...stat,
+        sum: Math.abs(Number(stat.sum)),
+    }))
+}
+
 export {
     handleCategoriesByType,
+    handleCategoryStatsByType,
 }

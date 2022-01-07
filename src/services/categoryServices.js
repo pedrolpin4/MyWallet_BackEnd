@@ -6,9 +6,9 @@ const handleCategoriesByType = async (type) => {
     return categories
 }
 
-const handleCategoryStatsByType = async (type) => {
+const handleCategoryStatsByType = async (type, userId) => {
     const isIncome = type === 'income' ? 't' : 'f';
-    const stats = await categoryRepository.selectCategoryStatsByType(isIncome);
+    const stats = await categoryRepository.selectCategoryStatsByType(isIncome, userId);
     return stats.rows.map(stat => ({
         ...stat,
         sum: Math.abs(Number(stat.sum)),

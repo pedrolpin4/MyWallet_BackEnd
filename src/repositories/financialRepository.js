@@ -26,8 +26,25 @@ const insertTransaction = async (userId, signalValue, description, date, categor
     return result;
 };
 
+const updateTransaction = async (id, value, description, categoryId, userId) => {
+    const result = await connection.query(`
+        UPDATE transactions SET value = $1, description = $2, category_id = $3
+        WHERE id = $4 AND "userId" = $5 RETURNING *;
+    `,[value, description, categoryId, id, userId]);
+    return result;
+}
+
+const deleteTransaction = async (id, userId) => {
+    const result = await connection.query(`
+        DELETE FROM transactions WHERE id = $1 AND "userId" = $2 RETURNING *;
+    `,[id, userId]);
+    return result;
+}
+
 export {
     selectUserByToken,
     selectTransactionsByToken,
     insertTransaction,
+    updateTransaction,
+    deleteTransaction,
 }

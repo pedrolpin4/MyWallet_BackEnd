@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import NotFound from "../errors/NotFound.js";
 import Unauthorized from "../errors/Unauthorized.js";
 import * as financialRepository from '../repositories/financialRepository.js'
 
@@ -24,8 +25,22 @@ const createTransaction = async (user, type, value, description, categoryId) => 
     await financialRepository.insertTransaction(userId, signalValue, description, date, categoryId)
 }
 
+const handleEditTransaction = async ( id, value, description, categoryId, userId ) => {
+   const result =  await financialRepository.updateTransaction(id, value, description, categoryId, userId)
+   if(!result.rowCount) throw new NotFound('this transaction was not found')
+   return result.rows
+}
+
+const handleDeleteTransaction = async ( id, userId ) => {
+    const result = await financialRepository.deleteTransaction(id, userId)
+    if(!result.rowCount) throw new NotFound('this transaction was not found')
+    return result.rows
+}
+
 export {
     verifyToken,
     getTransactions,
     createTransaction,
+    handleEditTransaction,
+    handleDeleteTransaction,
 }

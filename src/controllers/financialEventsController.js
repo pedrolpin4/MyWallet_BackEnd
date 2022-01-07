@@ -63,7 +63,7 @@ const editTransaction = async (req, res, next) => {
             type === "expense" ? -value : value,
             description, 
             categoryId,
-            user.rows[0].id
+            user.rows[0].userId
         );
         return res.sendStatus(200);
     } catch (error){
@@ -80,7 +80,7 @@ const deleteTransaction = async (req, res, next) => {
     try {
         if(!Number(id)) throw new ValidationError('The id param must be a number')
         const user = await financialServices.verifyToken(req);
-        await financialServices.handleDeleteTransaction(id, user.rows[0].id);
+        await financialServices.handleDeleteTransaction(id, user.rows[0].userId);
         return res.sendStatus(200);
     } catch (error){
         if(error instanceof ValidationError || error instanceof Unauthorized || error instanceof NotFound) {

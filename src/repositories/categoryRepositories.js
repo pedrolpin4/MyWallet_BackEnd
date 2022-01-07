@@ -7,7 +7,7 @@ const selectCategoriesByType = async (isIncome) => {
 
 const selectCategoryStatsByType = async (isIncome, userId) => {
     const result = await connection.query(`
-        SELECT SUM(transactions.value), transactions."userId" categories.* FROM categories 
+        SELECT SUM(transactions.value),  categories.* FROM categories
         JOIN transactions ON categories.id = transactions.category_id 
         WHERE is_income = $1 AND transactions."userId" = $2 GROUP BY categories.id
     `, [isIncome, userId]);

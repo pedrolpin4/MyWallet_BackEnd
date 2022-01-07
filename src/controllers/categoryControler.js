@@ -26,7 +26,7 @@ const getCategoryStatsByType =  async (req, res, next) => {
         if( type !== 'expense' && type !== 'income') throw new ValidationError(
             'please use only  "expense" or "income" in the requisition query'
         );
-        const stats = await categoryServices.handleCategoryStatsByType(type, user.id);
+        const stats = await categoryServices.handleCategoryStatsByType(type, user.rows[0].userId);
         return res.send(stats);
     } catch (error) {
         if(error instanceof ValidationError || error instanceof Unauthorized) {

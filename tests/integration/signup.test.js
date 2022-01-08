@@ -1,15 +1,18 @@
-import app from "../src/app.js";
+import app from "../../src/app.js";
 import supertest from "supertest";
-import connection from "../src/database/database.js"
+import faker from 'faker';
+import * as userFactory from '../factories/userFactory.js'
 
 describe("POST '/sign-up'", () => {
+    let user;
+
     beforeAll(async () => {
-        await connection.query(`DELETE FROM users WHERE email = 'pedrolucas@gmail.com';`);
-        await connection.query(`INSERT INTO users (name, email, password) 
-            VALUES ('pedro', 'pedrin@gmail.com', '123456')`)
+        user = await userFactory.createUser();
     })
 
-    afterAll(() => {connection.end()})
+    afterAll(async () => {
+        await userFactory.deleteUser(user.id);
+    })
 
     it('POST /sign-up returns 400 if non complete objects ', async () => {
         const body = {
@@ -72,7 +75,7 @@ describe("POST '/sign-up'", () => {
     it('POST /sign-up returns 409 if the email is already in the database', async () => {
         const body = {
             name: 'Pedro',
-            email: 'pedrin@gmail.com',
+            email: user.email,
             password: '123456',
             repeatPassword: '123456'
         }
@@ -87,7 +90,7 @@ describe("POST '/sign-up'", () => {
     it('POST /sign-up returns 201 if success', async () => {
         const body = {
             name: 'Pedro',
-            email: 'pedrolucas@gmail.com',
+            email: faker.internet.email(),
             password: '123456',
             repeatPassword: '123456'
         }

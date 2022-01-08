@@ -1,18 +1,16 @@
-import app from "../src/app.js";
+import app from "../../src/app.js";
 import supertest from "supertest";
-import connection from "../src/database/database.js"
-import bcrypt from "bcrypt"
+import { createUser, deleteUser } from '../factories/userFactory.js'
 
 describe('POST "/sign-in" ', () => {
+    let user;
     beforeAll(async () => {
-        const encriptedPassword = bcrypt.hashSync('1234567', 10);
-        await connection.query(`DELETE FROM users WHERE email = 'pedrin@gmail.com';`);
-        await connection.query('DELETE from sessions')
-        await connection.query(`INSERT INTO users (name, email, password) 
-            VALUES ('pedro', 'pedrin@gmail.com', $1)`, [encriptedPassword])
+        user = await createUser()
     })
 
-    afterAll(() => {connection.end()})
+    afterAll(async () => {
+        await deleteUser(user.id)
+    })
 
     it('POST "/sign-in" returns 400 if non complete objects', async () => {
         const body = {
@@ -67,7 +65,7 @@ describe('POST "/sign-in" ', () => {
 
     it('POST "/sign-in" returns 401 if a wrong password', async () => {
         const body = {
-            email: 'pedrin@gmail.com',
+            email: user.email,
             password: '12345678',
         }
 
@@ -80,8 +78,8 @@ describe('POST "/sign-in" ', () => {
 
     it('POST "/sign-in" returns 200 if succes', async () => {
         const body = {
-            email: 'pedrin@gmail.com',
-            password: '1234567'
+            email: user.email,
+            password: '123456',
         }
 
         const result = await supertest(app)
@@ -91,7 +89,7 @@ describe('POST "/sign-in" ', () => {
         expect(result.status).toEqual(200)
         expect(result.body).toEqual({
             token: expect.any(String),
-            name: 'pedro'
+            name: expect.any(String),
         })
     })
 })

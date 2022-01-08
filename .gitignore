@@ -3,6 +3,9 @@
 # dependencies
 /node_modules
 .vscode/
+.yarn
+yarn.lock
+.yarnrc.yml
 
 # misc
 .env.prod

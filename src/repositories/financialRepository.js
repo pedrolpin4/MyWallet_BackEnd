@@ -10,9 +10,11 @@ const selectUserByToken = async (token) => {
 
 const selectTransactionsByToken = async (token) => {
     const result = await connection.query(`
-        SELECT transactions.* FROM sessions
-        JOIN transactions
+        SELECT transactions.*, categories.name as category FROM sessions
+        JOIN transactions 
         ON sessions."userId" = transactions."userId"
+        JOIN categories
+        ON transactions.category_id = categories.id
         WHERE sessions.token = $1 ORDER BY id DESC
     `, [token]);
     return result;

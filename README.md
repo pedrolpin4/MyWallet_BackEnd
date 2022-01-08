@@ -15,7 +15,11 @@ Do you like registering your incomes and expenses in an old notebook? Well, I do
 - [x] login and sign-up
 - [x] see your cash-flow with date, description and value infos
 - [x] total balance based on your cash-flow
-- [x] register your credits (expenses) and yur debits (incomes)
+- [x] register your credits (expenses) and your debits (incomes);
+- [x] edit and delete your records
+- [x] organize your incomes and expenses by category
+- [x] toggle between light and dark mode
+- [x] analyze a beeeeautiful dashboard with charts and other stuff
 
 ## How to run?
 
